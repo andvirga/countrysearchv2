@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Container, Row, Col } from 'react-grid';
+import { CountriesGrid } from './CountriesGrid';
 import axios from 'axios';
 import './App.css';
 
@@ -46,26 +48,34 @@ export const App = () => {
     setPopulation(event.target.value);
   };
 
-  const mapCountriesData = (countries) => {
-    const list = countries.map((c) => {
-        return (<div>
-                    <li>{c.name}</li>
-                </div>
-                );
-    });
-
-    return list;
-  }
-
   return (
     <div>
       <h1>Country Search v2</h1>
-      Country Name: <input type="text" onChange={handleCountryNameChange}></input>
-      Population: <input type="text" onChange={handlePopulationChange}></input>
-      <button onClick={doSearch}>Search!</button>
-      <ul>
-        {countries.countryList ? mapCountriesData(countries.countryList) : <li></li>}
-      </ul>
+      <Container>
+        <Col>
+          <Row>
+            Country Name:
+          </Row>
+          <Row>
+            <input type="text" onChange={handleCountryNameChange}></input>
+          </Row>
+        </Col>
+        <Col>
+          <Row>
+            Population: 
+          </Row>
+          <Row>
+            <input type="text" onChange={handlePopulationChange}></input>
+          </Row>
+        </Col>
+        <Col>
+          <Row>
+            <button onClick={doSearch}>Search!</button>
+          </Row>
+        </Col>
+      </Container>
+      <br />
+      <CountriesGrid countryList={countries.countryList}/>
     </div>
   );
 }
