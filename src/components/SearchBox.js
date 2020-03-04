@@ -32,7 +32,7 @@ export const SearchBox = (props) => {
 };
 
 SearchBox.propTypes = {
-  handleCountryNameChange: PropTypes.fn.isRequired,
-  handlePopulationChange: PropTypes.fn.isRequired,
-  handleSearch: PropTypes.fn.isRequired,
+  handleCountryNameChange: PropTypes.func.isRequired,
+  handlePopulationChange: PropTypes.func.isRequired,
+  handleSearch: PropTypes.func.isRequired,
 };
