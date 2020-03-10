@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import * as countryActions from '../redux/actions/countryActions';
 import { bindActionCreators } from 'redux';
+import * as countryActions from '../redux/actions/countryActions';
 import { SearchBox } from './SearchBox';
 import { CountriesGrid } from './CountriesGrid';
-import { SearchCountry } from '../Helpers/Endpoints';
+import { SearchCountry } from '../api/CountriesApi';
 
 const HomePage = props => {
   const { country } = props;
@@ -50,7 +50,9 @@ const HomePage = props => {
       countryName: countryName,
       population: population,
     });
-    return SearchCountry(countryName).then(results => getCountryList(results));
+    return SearchCountry({ countryName, population }).then(results =>
+      getCountryList(results),
+    );
   };
 
   return (
