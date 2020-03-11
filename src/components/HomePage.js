@@ -1,59 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as countryActions from '../redux/actions/countryActions';
 import { SearchBox } from './SearchBox';
 import { CountriesGrid } from './CountriesGrid';
-import { SearchCountry } from '../api/CountriesApi';
+import { SearchCountriesAPI } from '../api/CountriesApi';
 
-const HomePage = props => {
-  const { country } = props;
+
+const fillCountryListWithReduxData = (stateFromRedux) => {
+  const lastElement = stateFromRedux[stateFromRedux.length - 1];
+
+  const countryList = (lastElement !== undefined
+    && lastElement.countries !== undefined
+    && lastElement.countries.length > 0)
+    ? lastElement.countries
+    : [];
+
+  return countryList;
+};
+
+const HomePage = ({ actions, stateFromRedux }) => {
   const [countryName, setCountryName] = useState('');
   const [population, setPopulation] = useState(0);
-  const [countries, setCountries] = useState({});
 
-  useEffect(() => {
-    if (population > 0) {
-      document.title =
-        'Country Name: ' + countryName + ' Population: ' + population;
-    }
-  });
+  const countryList = fillCountryListWithReduxData(stateFromRedux);
 
-  const getCountryList = results => {
-    var countries = [];
-    var countriesData = results.data.data;
-    for (var i = 0; i < countriesData.length; i++) {
-      if (countriesData[i].population > population) {
-        countries.push(countriesData[i]);
-      }
-    }
+  // Formats the data coming from API and store it with redux.
+  const getCountryList = (results) => {
+    // Filtering countries which population is below the user entered,
+    const apiData = results.data.data.filter((c) => c.population > population);
 
-    setCountries({
-      countryList: countries,
-      currentPage: results.data.page,
-      resultsPerPage: results.data.per_page,
-      totalPages: results.data.total_pages,
-      totalResults: results.data.total,
-    });
+    // --Calling saveCountries action dispatcher to store the countries in state (Redux).
+    actions.saveCountries(apiData);
   };
 
-  const handleCountryName = event => {
+  const handleCountryName = (event) => {
     setCountryName(event.target.value);
   };
 
-  const handlePopulation = event => {
+  const handlePopulation = (event) => {
     setPopulation(event.target.value);
   };
 
-  const doSearch = () => {
-    props.actions.searchCountry({
-      countryName: countryName,
-      population: population,
-    });
-    return SearchCountry({ countryName, population }).then(results =>
-      getCountryList(results),
-    );
-  };
+  const doSearch = () => SearchCountriesAPI({ countryName, population })
+    .then((results) => getCountryList(results));
 
   return (
     <>
@@ -64,18 +55,24 @@ const HomePage = props => {
         handleSearch={doSearch}
       />
       <br />
-      {country}
-      <CountriesGrid countryList={countries.countryList} />
+      <CountriesGrid countryList={countryList} />
     </>
   );
 };
 
+HomePage.propTypes = {
+  stateFromRedux: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired,
+};
+
+// --The state from redux is always mapped to the props with this method
 function mapStateToProps(state) {
   return {
-    country: state.countryName,
+    stateFromRedux: state.countryReducer,
   };
 }
 
+// --The actipn dispatchers are always mapped to the props with this method
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(countryActions, dispatch),

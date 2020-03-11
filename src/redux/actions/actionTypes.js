@@ -1,1 +1,3 @@
 export const SEARCH_COUNTRY = 'SEARCH_COUNTRY';
+export const SAVE_COUNTRIES = 'SAVE_COUNTRUES';
+export const ADD_TODO_ITEM = 'ADD_TODO_ITEM';
