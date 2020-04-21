@@ -7,7 +7,6 @@ import { SearchBox } from './SearchBox';
 import { CountriesGrid } from './CountriesGrid';
 import { SearchCountriesAPI } from '../api/CountriesApi';
 
-
 const fillCountryListWithReduxData = (stateFromRedux) => {
   const lastElement = stateFromRedux[stateFromRedux.length - 1];
 

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import { NavLink } from 'react-router-dom';
 
 const emptyResults = () => (
   <Grid item xs={12}>
@@ -10,13 +11,15 @@ const emptyResults = () => (
 );
 
 const mapCountriesData = countries => {
-  let list = countries.map(c => {
+  const list = countries.map(c => {
     const url = `https://www.countryflags.io/${c.alpha2Code}/flat/64.png`;
     const alt = `${c.name} flag`;
     return (
       <>
         <Grid item xs={3}>
-          {c.name}
+          <NavLink to="/detail" exact>
+            {c.name}
+          </NavLink>
         </Grid>
         <Grid item xs={3}>
           {c.capital}
