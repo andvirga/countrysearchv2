@@ -6,7 +6,14 @@ import { App } from './components/App';
 import configureStore from './redux/configureStore';
 import './styles/index.css';
 // import * as serviceWorker from '../serviceWorker';
-const store = configureStore();
+const initialState = {
+  countryReducer: {
+    countries: [],
+    filter: {},
+  }
+};
+
+const store = configureStore(initialState);
 
 ReactDOM.render(
   <Provider store={store}>

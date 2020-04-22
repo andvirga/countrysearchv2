@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 
-export function searchCountry(payload) {
-  return { type: types.SEARCH_COUNTRY, payload };
+export function saveFilters(payload) {
+  return { type: types.SAVE_FILTERS, payload };
 }
 
 export function saveCountries(payload) {

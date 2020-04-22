@@ -7,24 +7,11 @@ import { SearchBox } from './SearchBox';
 import { CountriesGrid } from './CountriesGrid';
 import { SearchCountriesAPI } from '../api/CountriesApi';
 
-
-const fillCountryListWithReduxData = (stateFromRedux) => {
-  const lastElement = stateFromRedux[stateFromRedux.length - 1];
-
-  const countryList = (lastElement !== undefined
-    && lastElement.countries !== undefined
-    && lastElement.countries.length > 0)
-    ? lastElement.countries
-    : [];
-
-  return countryList;
-};
-
 const HomePage = ({ actions, stateFromRedux }) => {
   const [countryName, setCountryName] = useState('');
   const [population, setPopulation] = useState(0);
 
-  const countryList = fillCountryListWithReduxData(stateFromRedux);
+  const countryList = stateFromRedux.countries;
 
   // Formats the data coming from API and store it with redux.
   const getCountryList = (results) => {
@@ -43,8 +30,14 @@ const HomePage = ({ actions, stateFromRedux }) => {
     setPopulation(event.target.value);
   };
 
-  const doSearch = () => SearchCountriesAPI({ countryName, population })
-    .then((results) => getCountryList(results));
+  const doSearch = () => {
+
+    actions.saveFilters({countryName, population});
+
+    SearchCountriesAPI({ countryName, population })
+      .then((results) => getCountryList(results));
+
+  };
 
   return (
     <>
@@ -61,7 +54,7 @@ const HomePage = ({ actions, stateFromRedux }) => {
 };
 
 HomePage.propTypes = {
-  stateFromRedux: PropTypes.array.isRequired,
+  stateFromRedux: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
 };
 
