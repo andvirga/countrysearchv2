@@ -1,63 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
-const emptyResults = () => (
-  <Grid item xs={12}>
-    <b>No country matches the entered criteria!</b>
-  </Grid>
-);
+const showFlag = (cellValue) => {
+  var eDiv = document.createElement('div');
+  eDiv.innerHTML = `<img src="https://www.countryflags.io/${cellValue.value}/flat/32.png">`;
+  return eDiv;
+}
 
-const mapCountriesData = countries => {
-  let list = countries.map(c => {
-    const url = `https://www.countryflags.io/${c.alpha2Code}/flat/64.png`;
-    const alt = `${c.name} flag`;
-    return (
-      <>
-        <Grid item xs={3}>
-          {c.name}
-        </Grid>
-        <Grid item xs={3}>
-          {c.capital}
-        </Grid>
-        <Grid item xs={3}>
-          {c.population}
-        </Grid>
-        <Grid item xs={3}>
-          <img src={url} alt={alt} />
-        </Grid>
-      </>
-    );
-  });
+const columnDefs = [
+  { headerName: 'Code', field: 'alpha3Code', width: 100 },
+  { headerName: 'Country', field: 'name', width: 200 },
+  {
+    headerName: 'Flag',
+    field: 'alpha2Code',
+    cellRenderer: showFlag,
+    width: 80,
+    sortable: false,
+    filter: false,
+  },
+  { headerName: 'Capital', field: 'capital', width: 200 },
+  { headerName: 'Population', field: 'population', width: 200 },
+  { headerName: 'Region', field: 'region', width: 200 },
+  { headerName: 'Subregion', field: 'subregion', width: 200 },
+];
 
-  return list;
+const defaultColDef = {
+  sortable: true,
+  filter: true,
 };
 
-export const CountriesGrid = props => {
+export const CountriesGrid = (props) => {
   const { countryList } = props;
   return (
-    <Container maxWidth="lg">
-      <Grid container spacing={1}>
-        <Grid item xs={3}>
-          <b>Country</b>
-        </Grid>
-        <Grid item xs={3}>
-          <b>Capital</b>
-        </Grid>
-        <Grid item xs={3}>
-          <b>Population</b>
-        </Grid>
-        <Grid item xs={3}>
-          <b>Flag</b>
-        </Grid>
-      </Grid>
-      <Grid container spacing={1}>
-        {countryList.length > 0
-          ? mapCountriesData(countryList)
-          : emptyResults()}
-      </Grid>
-    </Container>
+    <div className='ag-theme-alpine' style={{ height: '600px', width: '100%' }}>
+      <AgGridReact
+        columnDefs={columnDefs}
+        defaultColDef={defaultColDef}
+        rowData={countryList}
+      />
+    </div>
   );
 };
 
