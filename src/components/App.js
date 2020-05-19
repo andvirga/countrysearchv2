@@ -5,6 +5,7 @@ import HomePage from './HomePage';
 import AboutPage from './AboutPage';
 import PageNotFound from '../common/PageNotFound';
 import '../styles/App.css';
+import DetailPage from './DetailPage';
 
 export const App = () => (
   <div>
@@ -12,6 +13,7 @@ export const App = () => (
     <Switch>
       <Route exact path="/" component={HomePage} />
       <Route path="/about" component={AboutPage} />
+      <Route path="/detail/:code" render={(props) => <DetailPage {...props} />} />
       <Route component={PageNotFound} />
     </Switch>
   </div>

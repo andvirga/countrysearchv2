@@ -1,17 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
+import { Link } from 'react-router-dom';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
+const showLink = (cell) => {
+  return <Link to={`detail/${cell.value}`}>{cell.value}</Link>;
+};
+
 const showFlag = (cellValue) => {
-  var eDiv = document.createElement('div');
+  let eDiv = document.createElement('div');
   eDiv.innerHTML = `<img src="https://www.countryflags.io/${cellValue.value}/flat/32.png">`;
   return eDiv;
 }
 
 const columnDefs = [
-  { headerName: 'Code', field: 'alpha3Code', width: 100 },
+  { headerName: 'Code', field: 'alpha3Code', width: 100, cellRendererFramework: showLink },
   { headerName: 'Country', field: 'name', width: 200 },
   {
     headerName: 'Flag',
